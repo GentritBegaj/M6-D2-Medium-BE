@@ -161,7 +161,15 @@ router.put("/:articleId/reviews/:reviewId", async (req, res, next) => {
         _id: mongoose.Types.ObjectId(req.params.articleId),
         "reviews._id": mongoose.Types.ObjectId(req.params.reviewId),
       },
-      { $set: { "reviews.$": req.body } },
+      {
+        $set: {
+          "reviews.$": {
+            ...req.body,
+            _id: req.params.reviewId,
+            updatedAt: new Date(),
+          },
+        },
+      },
       {
         runValidators: true,
         new: true,

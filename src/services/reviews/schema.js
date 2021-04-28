@@ -12,6 +12,9 @@ const ReviewSchema = new Schema(
       type: String,
       required: true,
     },
+    updatedAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

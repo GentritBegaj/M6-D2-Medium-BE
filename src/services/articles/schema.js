@@ -20,6 +20,8 @@ const ArticleSchema = new Schema(
       {
         text: String,
         user: String,
+        createdAt: Date,
+        updatedAt: Date,
       },
     ],
   },
