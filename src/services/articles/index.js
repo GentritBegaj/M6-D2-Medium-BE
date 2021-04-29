@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import q2m from "query-to-mongo";
 import ArticleModel from "./schema.js";
 import ReviewModel from "../reviews/schema.js";
 import mongoose from "mongoose";
@@ -8,8 +8,11 @@ const router = Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const articles = await ArticleModel.find();
-    res.send(articles);
+    const query = q2m(req.query);
+    const { total, articles } = await ArticleModel.findArticlesWithAuthors(
+      query
+    );
+    res.send({ links: query.links("/articles", total), articles });
   } catch (err) {
     next(err);
   }
@@ -17,7 +20,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const article = await ArticleModel.findById(req.params.id);
+    const article = await ArticleModel.findArticleWithAuthors(req.params.id);
     if (article) {
       res.send(article);
     } else {
@@ -26,6 +29,7 @@ router.get("/:id", async (req, res, next) => {
       next(error);
     }
   } catch (err) {
+    console.log(err);
     next(err);
   }
 });

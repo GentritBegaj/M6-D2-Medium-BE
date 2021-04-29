@@ -8,6 +8,7 @@ import {
   catchAllErrorHandler,
 } from "./errorHandlers.js";
 import articlesRoutes from "./services/articles/index.js";
+import authorsRoutes from "./services/authors/index.js";
 
 const server = express();
 
@@ -16,6 +17,7 @@ const port = process.env.PORT;
 server.use(cors());
 server.use(express.json());
 server.use("/articles", articlesRoutes);
+server.use("/authors", authorsRoutes);
 
 console.log(listEndpoints(server));
 
