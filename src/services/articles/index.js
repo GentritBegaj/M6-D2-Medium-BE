@@ -1,6 +1,7 @@
 import { Router } from "express";
 import q2m from "query-to-mongo";
 import ArticleModel from "./schema.js";
+import AuthorModel from "../authors/schema.js";
 import ReviewModel from "../reviews/schema.js";
 import mongoose from "mongoose";
 
@@ -37,8 +38,19 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const newArticle = new ArticleModel(req.body);
-    const { _id } = await newArticle.save();
-    res.status(201).send(_id);
+    const article = await newArticle.save();
+    article.authors.forEach(async (author) => {
+      await AuthorModel.findByIdAndUpdate(
+        { _id: author },
+        {
+          $push: {
+            articles: article._id,
+          },
+        },
+        { runValidators: true, new: true }
+      );
+    });
+    res.status(201).send(article._id);
   } catch (err) {
     next(err);
   }

@@ -11,10 +11,6 @@ const ArticleSchema = new Schema(
       name: String,
       img: String,
     },
-    author: {
-      name: String,
-      img: String,
-    },
     cover: String,
     reviews: [
       {

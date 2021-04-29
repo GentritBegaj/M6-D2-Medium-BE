@@ -10,6 +10,7 @@ router.get("/", async (req, res, next) => {
     const total = await AuthorModel.countDocuments(query.criteria);
 
     const authors = await AuthorModel.find(query.criteria, query.options.fields)
+      .populate("articles")
       .sort(query.options.sort)
       .limit(query.options.limit)
       .skip(query.options.skip);
@@ -23,7 +24,9 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const author = await AuthorModel.findById(req.params.id);
+    const author = await AuthorModel.findById(req.params.id).populate(
+      "articles"
+    );
     res.send(author);
   } catch (err) {
     console.log(err);
